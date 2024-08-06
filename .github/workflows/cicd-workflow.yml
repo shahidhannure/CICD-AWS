@@ -40,7 +40,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: todo-app-task-definition.json 
-          container-name: TodoCluster
+          container-name: todo-node-app
           image: ${{ steps.build-image.outputs.image }}    
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1

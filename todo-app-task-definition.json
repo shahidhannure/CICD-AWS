@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:588136850995:task-definition/todo-app-task-definition:1",
+    "taskDefinitionArn": "arn:aws:ecs:ap-south-1:588136850995:task-definition/todo-app-task-definition:5",
     "containerDefinitions": [
         {
             "name": "todo-node-app",
@@ -7,11 +7,10 @@
             "cpu": 0,
             "portMappings": [
                 {
-                    "name": "todo-3000-tcp",
+                    "name": "todo-node-app-3000-tcp",
                     "containerPort": 3000,
                     "hostPort": 3000,
-                    "protocol": "tcp",
-                    "appProtocol": "http"
+                    "protocol": "tcp"
                 }
             ],
             "essential": true,
@@ -37,7 +36,7 @@
     "taskRoleArn": "arn:aws:iam::588136850995:role/ECS-role-cicd",
     "executionRoleArn": "arn:aws:iam::588136850995:role/ECS-role-cicd",
     "networkMode": "awsvpc",
-    "revision": 1,
+    "revision": 5,
     "volumes": [],
     "status": "ACTIVE",
     "requiresAttributes": [
@@ -83,7 +82,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-08-06T15:59:07.529Z",
+    "registeredAt": "2024-08-07T06:04:18.268Z",
     "registeredBy": "arn:aws:iam::588136850995:root",
     "tags": []
 }

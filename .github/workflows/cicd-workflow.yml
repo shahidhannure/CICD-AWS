@@ -53,7 +53,7 @@ jobs:
       - name: Run integration tests
         id: integration-tests
         run: |
-          #curl -f http://127.0.0.1:3000
+          curl -f http://127.0.0.1:2000
         continue-on-error: true
 
       - name: Rollback on failure

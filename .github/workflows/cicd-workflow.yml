@@ -59,12 +59,22 @@ jobs:
       - name: Rollback on failure
         if: failure()
         run: |
-          # Get the previous task definition from ECS service history or version control
-          PREVIOUS_TASK_DEFINITION=$(aws ecs describe-services --cluster ${{ secrets.ECS_CLUSTER }} --services ${{ secrets.ECS_SERVICE }} --query "services[0].deployments[1].taskDefinition" --output text)
-          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service ${{ secrets.ECS_SERVICE }} --task-definition $PREVIOUS_TASK_DEFINITION
-
+          echo "Integration tests failed. Rolling back..."
+          
+          # Get the previous task definition from ECS service history
+          PREVIOUS_TASK_DEFINITION=$(aws ecs describe-services \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --services ${{ secrets.ECS_SERVICE }} \
+            --query "services[0].deployments[1].taskDefinition" \
+            --output text)
+          
+          # Update the service with the previous task definition to rollback
+          aws ecs update-service \
+            --cluster ${{ secrets.ECS_CLUSTER }} \
+            --service ${{ secrets.ECS_SERVICE }} \
+            --task-definition $PREVIOUS_TASK_DEFINITION
+      
       - name: Notify failure
         if: failure()
         run: |
           echo "Deployment failed and rolled back"
-          # Add additional notification logic here (e.g., Slack, email)

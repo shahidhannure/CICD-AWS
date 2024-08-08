@@ -50,21 +50,21 @@ jobs:
           cluster: TodoCluster
           wait-for-service-stability: true
 
-    integration-tests:
       - name: Run integration tests
         id: integration-tests
         run: |
           curl -f http://127.0.0.1:2000
         continue-on-error: true
 
-    rollback:
-    needs: integration-tests
-    if: failure()
-      steps:
-      - name: Rollback deployment
-        env:
-          AWS_REGION: ap-south-1
-          ECS_SERVICE: todo-app-service
-          ECS_CLUSTER: TodoCluster
+      - name: Rollback on failure
+        if: failure()
         run: |
-          ecs-deploy --region $AWS_REGION --cluster $ECS_CLUSTER --service-name $ECS_SERVICE --rollback --timeout 600
+          # Get the previous task definition from ECS service history or version control
+          PREVIOUS_TASK_DEFINITION=$(aws ecs describe-services --cluster ${{ secrets.ECS_CLUSTER }} --services ${{ secrets.ECS_SERVICE }} --query "services[0].deployments[1].taskDefinition" --output text)
+          aws ecs update-service --cluster ${{ secrets.ECS_CLUSTER }} --service ${{ secrets.ECS_SERVICE }} --task-definition $PREVIOUS_TASK_DEFINITION
+
+      - name: Notify failure
+        if: failure()
+        run: |
+          echo "Deployment failed and rolled back"
+          # Add additional notification logic here (e.g., Slack, email)
